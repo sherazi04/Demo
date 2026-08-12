@@ -1,6 +1,8 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/auth/config";
 import { listOfferedDemoAccounts } from "@/auth/demo-accounts";
+import { SetupRequired } from "@/components/setup-required";
+import { missingSettings } from "@/lib/setup-status";
 import { LoginForm } from "./login-form";
 
 export const metadata = { title: "Sign in · Dual-Engine Learning" };
@@ -13,6 +15,11 @@ export default async function LoginPage({
 }: {
   searchParams: Promise<{ error?: string }>;
 }) {
+  // Checked before `auth()`, which reads AUTH_SECRET and would throw — turning
+  // a fixable configuration gap into an opaque digest.
+  const missing = missingSettings();
+  if (missing.length > 0) return <SetupRequired missing={missing} />;
+
   const session = await auth();
   if (session?.user?.id) redirect("/");
 
