@@ -14,6 +14,7 @@ import {
   users,
 } from "@/db/schema";
 import { hashPassword } from "@/auth/password";
+import { DEMO_ACCOUNTS, DEMO_PASSWORD } from "@/auth/demo-accounts";
 import { nextItem, startAttempt, submitAnswer } from "@/student/quiz";
 import { awardBadge, setLeaderboardOptIn } from "@/student/gamification";
 import { regeneratePlan } from "@/student/learning-plan";
@@ -40,22 +41,22 @@ import { env } from "@/lib/env";
  * Idempotent: re-running replaces what a previous run created.
  */
 
-/** Meets the 12-character policy; documented in the README and printed below. */
-const PASSWORD = "DemoPass!2025";
+/**
+ * Password and the first two accounts come from `src/auth/demo-accounts.ts`, so
+ * the sign-in page cannot offer a credential this script never created.
+ */
+const PASSWORD = DEMO_PASSWORD;
 
 const ACCOUNTS = [
-  {
-    email: "teacher@example.edu",
-    name: "Dr Amara Okafor",
-    role: "teacher" as const,
-    enrolAs: "teacher" as const,
-  },
-  {
-    email: "student@example.edu",
-    name: "Sara Ahmed",
-    role: "student" as const,
-    enrolAs: "student" as const,
-  },
+  ...DEMO_ACCOUNTS.map((a) => ({
+    email: a.email,
+    name: a.name,
+    role: a.role,
+    enrolAs: a.role === "teacher" ? ("teacher" as const) : ("student" as const),
+  })),
+  // A second student, so the leaderboard and cohort comparisons have someone to
+  // compare against. Not offered on the sign-in page — one student is enough
+  // there, and this one has no activity.
   {
     email: "student2@example.edu",
     name: "Bilal Hussain",

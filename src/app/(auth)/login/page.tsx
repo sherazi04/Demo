@@ -1,8 +1,12 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/auth/config";
+import { listOfferedDemoAccounts } from "@/auth/demo-accounts";
 import { LoginForm } from "./login-form";
 
 export const metadata = { title: "Sign in · Dual-Engine Learning" };
+
+/** The demo accounts are read per request, so seeding or removing them shows up. */
+export const dynamic = "force-dynamic";
 
 export default async function LoginPage({
   searchParams,
@@ -12,7 +16,10 @@ export default async function LoginPage({
   const session = await auth();
   if (session?.user?.id) redirect("/");
 
-  const { error } = await searchParams;
+  const [{ error }, demoAccounts] = await Promise.all([
+    searchParams,
+    listOfferedDemoAccounts(),
+  ]);
 
   return (
     <main
@@ -29,8 +36,19 @@ export default async function LoginPage({
           </p>
         </div>
 
+        {/*
+          One sentence on what the system does, for the reader who has been sent
+          a link and has no idea what they are looking at. It names the property
+          the whole design exists to enforce, because that is the thing worth
+          knowing before clicking anything.
+        */}
+        <p className="mb-6 rounded-lg border bg-card/60 px-4 py-3 text-center text-xs leading-relaxed text-muted-foreground">
+          Every question, hint and lesson plan here is traceable to a course learning
+          outcome, a Bloom&rsquo;s level, and the source passage it was grounded on.
+        </p>
+
         <div className="rounded-lg border bg-card p-6 shadow-sm">
-          <LoginForm initialError={error} />
+          <LoginForm initialError={error} demoAccounts={demoAccounts} />
         </div>
 
         {/*
