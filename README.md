@@ -136,13 +136,16 @@ CREATE EXTENSION IF NOT EXISTS pg_trgm;
 | `INGEST_MODE` | `inline` | Skips a Redis probe that would otherwise wait on every cold start |
 | `BOOTSTRAP_ADMIN_EMAIL` / `BOOTSTRAP_ADMIN_PASSWORD` | your own | **Change these** — the defaults are published in this README |
 
-**3. Migrate and seed from your machine**, pointing at the cloud database:
+**3. Migrate and seed from your machine**, pointing at the cloud database. One command
+does all of it — migrations, curriculum, admin account, demo corpus and cohort:
 
 ```bash
-DATABASE_URL='<your neon url>' npm run db:migrate
-DATABASE_URL='<your neon url>' npm run bootstrap
-DATABASE_URL='<your neon url>' npm run demo:seed     # optional demo content
+DATABASE_URL='<your neon url>' DATABASE_POOL_MAX=5 npm run deploy:setup
 ```
+
+Use the **direct** (unpooled) Neon string here, not the pooled one — the seeds open long
+transactions that a connection pooler in transaction mode will cut short. The pooled
+string is what belongs in Vercel, where the workload is short serverless requests.
 
 **4. Redeploy**, then check `/api/health` — it should report `"status": "ok"`.
 

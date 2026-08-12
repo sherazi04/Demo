@@ -35,6 +35,7 @@
     "demo:reset": "tsx scripts/demo-reset.ts",
     "bootstrap": "npm run db:migrate && npm run seed:curriculum && npm run sync:kg && npm run seed:users",
     "demo:seed": "npm run seed:demo && npm run seed:cohort && npm run seed:accounts",
+    "deploy:setup": "npm run bootstrap && npm run demo:seed",
     "verify": "npm run typecheck && npm run test && npm run verify:schema && npm run smoke && npm run smoke:ingest && npm run smoke:analytics && npm run verify:chain",
     "eval": "tsx eval/report.ts"
   },
