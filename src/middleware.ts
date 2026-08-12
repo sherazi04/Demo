@@ -11,7 +11,13 @@ import { NextResponse, type NextRequest } from "next/server";
  * about who can read what.
  */
 
-const PUBLIC_PATHS = ["/login", "/set-password"];
+/**
+ * `/api/health` is public deliberately: it diagnoses the configuration failures
+ * that stop anyone signing in, so gating it behind a session would make it
+ * useless exactly when it is needed. It reports presence and reachability only,
+ * never values — no secret or connection string appears in its response.
+ */
+const PUBLIC_PATHS = ["/login", "/set-password", "/api/health"];
 
 const SESSION_COOKIES = [
   "authjs.session-token",

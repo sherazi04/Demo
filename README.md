@@ -106,6 +106,55 @@ Two caveats, both handled rather than hidden:
 
 [PGlite]: https://pglite.dev
 
+### Deploying to Vercel
+
+Vercel runs the app; it does not give you a database. The build succeeds without one —
+nothing is statically generated from the database — so a missing `DATABASE_URL` shows up
+only at runtime, as *"Application error: a server-side exception has occurred. Digest:
+…"*. That digest is not diagnosable on its own, which is what `/api/health` is for:
+open `https://<your-app>.vercel.app/api/health` and it names exactly what is missing.
+
+**1. Provision Postgres with pgvector.** [Neon](https://neon.tech) has a free tier and
+supports the extension; Supabase and Vercel Postgres also work. Then enable the
+extensions once:
+
+```sql
+CREATE EXTENSION IF NOT EXISTS vector;
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
+```
+
+**2. Set the environment variables** in Vercel → Settings → Environment Variables:
+
+| Variable | Value | Why |
+|---|---|---|
+| `DATABASE_URL` | Neon **pooled** connection string | Serverless opens many short-lived connections |
+| `DATABASE_POOL_MAX` | `1` | Each serverless instance keeps its own pool; a large one exhausts the server |
+| `AUTH_SECRET` | `openssl rand -base64 32` | Required, at least 16 characters |
+| `AUTH_TRUST_HOST` | `true` | Auth.js v5 must trust Vercel's proxy or callbacks point at the wrong origin |
+| `APP_URL` | `https://<your-app>.vercel.app` | Used in absolute links |
+| `EMBEDDING_PROVIDER` | `local` | No API key needed |
+| `INGEST_MODE` | `inline` | Skips a Redis probe that would otherwise wait on every cold start |
+| `BOOTSTRAP_ADMIN_EMAIL` / `BOOTSTRAP_ADMIN_PASSWORD` | your own | **Change these** — the defaults are published in this README |
+
+**3. Migrate and seed from your machine**, pointing at the cloud database:
+
+```bash
+DATABASE_URL='<your neon url>' npm run db:migrate
+DATABASE_URL='<your neon url>' npm run bootstrap
+DATABASE_URL='<your neon url>' npm run demo:seed     # optional demo content
+```
+
+**4. Redeploy**, then check `/api/health` — it should report `"status": "ok"`.
+
+Two things behave differently in production, both deliberately:
+
+- **The demo sign-in buttons do not appear.** They are withheld whenever `NODE_ENV` is
+  production, so you sign in with `BOOTSTRAP_ADMIN_EMAIL` / `BOOTSTRAP_ADMIN_PASSWORD`.
+- **Uploads run inline, inside the request.** With no Redis there is no worker, so a
+  large document can exceed the serverless execution limit. The ingestion pipeline is
+  better exercised locally; deploy Redis and run `npm run worker` on a host that supports
+  long-lived processes if you need it in production.
+
 ### Running without any API key
 
 The system is functional offline:
