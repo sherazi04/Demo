@@ -1,0 +1,1 @@
+ALTER TABLE "materials" ADD CONSTRAINT "materials_license_note_required" CHECK (length(btrim("materials"."license_note")) >= 3);

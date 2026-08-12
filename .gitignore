@@ -1,0 +1,30 @@
+node_modules/
+.next/
+out/
+dist/
+build/
+
+.env
+.env.local
+.env.*.local
+
+# Local PGlite cluster (scripts/local-db.ts) — a real database directory holding
+# password hashes, the audit chain and every seeded row. Never in the repo.
+.localdb/
+
+# Runtime file storage — uploaded course material never enters the repo (FR-INT-012 / R6)
+data/uploads/*
+!data/uploads/.gitkeep
+
+eval/report.json
+eval/report.md
+
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.tsbuildinfo
+next-env.d.ts
+coverage/

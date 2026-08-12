@@ -1,0 +1,101 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * One token set; each panel re-points --primary and --accent via its
+ * data-panel attribute (NFR-UX-001). Contrast ratios of the foreground/
+ * background pairs below are chosen to clear WCAG 2.2 AA at normal text size
+ * (NFR-UX-002).
+ */
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222 47% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 222 47% 31%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222 47% 18%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 20% 35%;
+    --accent: 210 40% 94%;
+    --accent-foreground: 222 47% 18%;
+    --destructive: 0 72% 38%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 152 61% 24%;
+    --success-foreground: 0 0% 100%;
+    --warning: 32 90% 28%;
+    --warning-foreground: 0 0% 100%;
+    --border: 214 32% 88%;
+    --input: 214 32% 88%;
+    --ring: 222 47% 31%;
+    --radius: 0.6rem;
+  }
+
+  /* Student — calm, one task per screen. */
+  [data-panel="student"] {
+    --primary: 173 62% 26%;
+    --primary-foreground: 0 0% 100%;
+    --accent: 173 45% 94%;
+    --accent-foreground: 173 62% 18%;
+    --ring: 173 62% 26%;
+  }
+
+  /* Teacher — dense, work-oriented. */
+  [data-panel="teacher"] {
+    --primary: 243 52% 40%;
+    --primary-foreground: 0 0% 100%;
+    --accent: 243 60% 96%;
+    --accent-foreground: 243 52% 28%;
+    --ring: 243 52% 40%;
+  }
+
+  /* Admin — operational, tabular. */
+  [data-panel="admin"] {
+    --primary: 222 30% 24%;
+    --primary-foreground: 0 0% 100%;
+    --accent: 222 20% 94%;
+    --accent-foreground: 222 30% 18%;
+    --ring: 222 30% 24%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /*
+   * Focus must be visible on every interactive element (NFR-UX-002). Declared
+   * globally rather than per-component so a new component cannot forget it.
+   */
+  :focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+
+  /* Respect a user's reduced-motion preference rather than animating anyway. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer utilities {
+  /* Visible only to screen readers — used for table captions and status text. */
+  .sr-only-focusable:focus {
+    @apply not-sr-only fixed left-4 top-4 z-50 rounded-md bg-primary px-4 py-2 text-primary-foreground;
+  }
+}
