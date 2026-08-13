@@ -79,7 +79,7 @@ export function LoginForm({
             onChange={(e) => setEmail(e.target.value)}
             aria-describedby={error ? "login-error" : undefined}
             aria-invalid={error ? true : undefined}
-            className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+            className="w-full rounded-md border-0 border-b-2 border-border bg-input px-3 py-2.5 text-sm transition-colors focus:border-primary"
           />
         </div>
 
@@ -98,7 +98,7 @@ export function LoginForm({
               onChange={(e) => setPassword(e.target.value)}
               aria-describedby={error ? "login-error" : undefined}
               aria-invalid={error ? true : undefined}
-              className="w-full rounded-md border border-input bg-background py-2 pl-3 pr-16 text-sm"
+              className="w-full rounded-md border-0 border-b-2 border-border bg-input py-2.5 pl-3 pr-16 text-sm transition-colors focus:border-primary"
             />
             {/*
               A toggle rather than a permanently-visible field: mistyping a
@@ -130,7 +130,7 @@ export function LoginForm({
         <button
           type="submit"
           disabled={pending}
-          className="w-full rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground disabled:opacity-60"
+          className="w-full rounded-md bg-gradient-engine px-4 py-2.5 text-sm font-semibold text-[hsl(211_76%_8%)] transition-all hover:brightness-110 disabled:opacity-60"
         >
           {pending ? "Signing in…" : "Sign in"}
         </button>
@@ -139,7 +139,7 @@ export function LoginForm({
       {demoAccounts.length > 0 && (
         <div className="space-y-3 border-t pt-5">
           <div>
-            <p className="text-sm font-medium">Or explore with a demo account</p>
+            <p className="font-display text-sm font-semibold">Or explore with a demo account</p>
             <p className="mt-1 text-xs text-muted-foreground">
               Pre-seeded accounts with real activity. Shown because this is not a
               production environment and these accounts exist.
@@ -153,15 +153,15 @@ export function LoginForm({
                 type="button"
                 onClick={() => void useDemoAccount(account)}
                 disabled={pending}
-                className="flex w-full items-center justify-between gap-3 rounded-md border bg-background px-3 py-2 text-left hover:bg-accent disabled:opacity-60"
+                className="glow-hover flex w-full items-center justify-between gap-3 rounded-md border border-border bg-surface-1 px-4 py-3 text-left disabled:opacity-60"
               >
                 <span>
-                  <span className="block text-sm font-medium capitalize">
+                  <span className="block font-display text-sm font-semibold capitalize">
                     Sign in as {account.role}
                   </span>
-                  <span className="block text-xs text-muted-foreground">{account.blurb}</span>
+                  <span className="mt-0.5 block text-xs text-muted-foreground">{account.blurb}</span>
                 </span>
-                <span className="shrink-0 text-xs text-muted-foreground">{account.name}</span>
+                <span className="label-mono shrink-0 text-muted-foreground">{account.name}</span>
               </button>
             ))}
           </div>
