@@ -32,3 +32,6 @@ coverage/
 # Per-machine tool permissions, not project configuration — the ".local" name
 # is the convention for exactly this.
 .claude/settings.local.json
+
+.vercel
+.env*

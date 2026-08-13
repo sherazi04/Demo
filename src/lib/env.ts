@@ -34,16 +34,38 @@ const str = (dflt: string) =>
     .optional()
     .transform((v) => (v === undefined || v === "" ? dflt : v));
 
-export const effortSchema = z.enum(["low", "medium", "high", "xhigh", "max"]);
+/**
+ * An enum whose default also applies to an empty value.
+ *
+ * `z.enum([...]).default(x)` only falls back when the variable is *absent*. A
+ * variable that exists and holds "" fails validation instead — and every hosting
+ * dashboard makes an empty variable trivially easy to create, by adding the key
+ * and not filling in the value. That failure then surfaces as the whole app
+ * refusing to start, naming a setting the operator believed they had configured.
+ *
+ * The scalar helpers above already treat "" as absent; this makes the enums
+ * agree with them, so the rule is the same everywhere: an empty variable means
+ * "use the default", never "crash".
+ */
+const enumOr = <T extends readonly [string, ...string[]]>(values: T, dflt: T[number]) =>
+  z
+    .string()
+    .optional()
+    .transform((v) => (v === undefined || v.trim() === "" ? dflt : v.trim()))
+    .pipe(z.enum(values));
+
+export const EFFORTS = ["low", "medium", "high", "xhigh", "max"] as const;
+export const effortSchema = z.enum(EFFORTS);
 export type Effort = z.infer<typeof effortSchema>;
 
-export const embeddingProviderSchema = z.enum(["voyage", "openai", "local"]);
+export const EMBEDDING_PROVIDERS = ["voyage", "openai", "local"] as const;
+export const embeddingProviderSchema = z.enum(EMBEDDING_PROVIDERS);
 export type EmbeddingProviderId = z.infer<typeof embeddingProviderSchema>;
 
 const envSchema = z.object({
-  NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
+  NODE_ENV: enumOr(["development", "test", "production"] as const, "development"),
   APP_URL: str("http://localhost:3000"),
-  LOG_LEVEL: z.enum(["debug", "info", "warn", "error"]).default("info"),
+  LOG_LEVEL: enumOr(["debug", "info", "warn", "error"] as const, "info"),
 
   DATABASE_URL: z.string().min(1, "DATABASE_URL is required"),
   DATABASE_POOL_MAX: int(10),
@@ -59,7 +81,7 @@ const envSchema = z.object({
    * running the six stages in-process, so the pipeline is demonstrable without
    * Redis; `queue` refuses to fall back, which is what a deployment wants.
    */
-  INGEST_MODE: z.enum(["auto", "queue", "inline"]).default("auto"),
+  INGEST_MODE: enumOr(["auto", "queue", "inline"] as const, "auto"),
 
   AUTH_SECRET: z.string().min(16, "AUTH_SECRET must be at least 16 characters"),
   BCRYPT_ROUNDS: int(12),
@@ -71,16 +93,16 @@ const envSchema = z.object({
   LLM_MODEL_GENERATION: str("claude-opus-5"),
   LLM_MODEL_JUDGE: str("claude-opus-5"),
   LLM_MODEL_BULK: str("claude-opus-5"),
-  LLM_EFFORT_GENERATION: effortSchema.default("high"),
-  LLM_EFFORT_JUDGE: effortSchema.default("high"),
-  LLM_EFFORT_BULK: effortSchema.default("low"),
+  LLM_EFFORT_GENERATION: enumOr(EFFORTS, "high"),
+  LLM_EFFORT_JUDGE: enumOr(EFFORTS, "high"),
+  LLM_EFFORT_BULK: enumOr(EFFORTS, "low"),
   LLM_MAX_TOKENS: int(16_000),
   LLM_MAX_TOKENS_STREAMING: int(64_000),
   LLM_SCHEMA_RETRIES: int(2),
   LLM_TIMEOUT_MS: int(180_000),
   LLM_MAX_RETRIES: int(3),
 
-  EMBEDDING_PROVIDER: embeddingProviderSchema.default("local"),
+  EMBEDDING_PROVIDER: enumOr(EMBEDDING_PROVIDERS, "local"),
   EMBEDDING_DIMENSIONS: int(1024),
   VOYAGE_API_KEY: z.string().optional().default(""),
   VOYAGE_MODEL: str("voyage-3"),
