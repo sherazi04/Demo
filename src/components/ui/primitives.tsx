@@ -52,12 +52,13 @@ type ButtonVariant = "primary" | "secondary" | "ghost" | "destructive";
  * The primary action carries the teal-to-amethyst gradient — the two engines
  * meeting, used only for the one thing a screen most wants you to do.
  *
- * Its text is the deep navy rather than white. White on that gradient measures
- * roughly 1.9:1 against the teal end and fails AA outright; the navy clears 8:1
- * and keeps the gradient exactly as designed (NFR-UX-002).
+ * The gradient runs between the *darker* pair (teal-700 → amethyst-700) rather
+ * than the bright pair used on the navigation rail. White text on the bright
+ * gradient measures roughly 1.9:1 against its teal end and fails AA outright;
+ * on the darker pair it clears 5:1 at both ends (NFR-UX-002).
  */
 const BUTTON_VARIANTS: Record<ButtonVariant, string> = {
-  primary: "bg-gradient-engine text-[hsl(211_76%_8%)] font-semibold hover:brightness-110",
+  primary: "bg-gradient-engine text-white font-semibold hover:brightness-110",
   secondary: "border border-border bg-transparent text-foreground hover:bg-primary/10",
   ghost: "text-muted-foreground hover:bg-primary/10 hover:text-foreground",
   destructive: "bg-destructive text-destructive-foreground hover:brightness-110",

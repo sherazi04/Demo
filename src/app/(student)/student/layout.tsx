@@ -1,5 +1,6 @@
 import { requireUser } from "@/auth/guard";
-import { PanelShell, type NavItem } from "@/components/panel-shell";
+import { PanelShell } from "@/components/panel-shell";
+import type { NavItem } from "@/components/sidebar";
 
 const NAV: readonly NavItem[] = [
   { href: "/student", label: "Today", icon: "◈" },

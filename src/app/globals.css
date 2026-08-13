@@ -3,101 +3,108 @@
 @tailwind utilities;
 
 /*
- * "Governed Intelligence" — dark scholarly navy, tonal elevation, two accents
- * that carry meaning rather than decoration:
+ * "Governed Intelligence" — a dark navigation rail against a light working
+ * surface. The rail stays dark so it recedes and the content is what you look
+ * at; the content area is near-white so long reading (question stems, lecture
+ * plans, audit rows) is comfortable.
  *
- *   Teal    → the Intelligence layer. Retrieval, adaptation, what the system infers.
+ * Two accents that carry meaning rather than decoration:
+ *
+ *   Teal     → the Intelligence layer. Retrieval, adaptation, what the system infers.
  *   Amethyst → the Governance layer. Audit, validation, what the system enforces.
  *
- * That mapping is the whole point of the colour system, so it is applied
- * consistently: the student panel leans teal, the admin panel leans amethyst,
- * and the teacher panel — which does both — carries teal with amethyst
- * highlights.
+ * Each accent exists at two strengths, because the same hue cannot serve both
+ * surfaces: the bright teal that reads well on navy measures about 2:1 on white
+ * and fails WCAG AA outright. So the rail uses the bright pair and the content
+ * area uses a darker pair that clears AA on white (NFR-UX-002). Same meaning,
+ * two values, chosen by which surface they sit on.
  *
- * One token set; each panel re-points --primary and --accent via its
- * data-panel attribute (NFR-UX-001). Foreground/background pairs are chosen to
- * clear WCAG 2.2 AA at normal text size (NFR-UX-002).
+ * One token set; each panel re-points --primary via its data-panel attribute
+ * (NFR-UX-001).
  */
 @layer base {
   :root {
-    /* Level 0 — the page itself. #051424 */
-    --background: 211 76% 8%;
-    --foreground: 215 79% 91%;
+    /* ── content surface: light ─────────────────────────────────────────── */
+    --background: 210 40% 98%;
+    --foreground: 222 47% 11%;
 
-    /* Tonal elevation. Depth comes from these, not from heavy shadows. */
-    --surface-1: 212 55% 12%;
-    --surface-2: 211 46% 13%;
-    --surface-3: 212 36% 17%;
+    --surface-1: 0 0% 100%;
+    --surface-2: 210 40% 98%;
+    --surface-3: 214 32% 91%;
 
-    --card: 212 55% 12%;
-    --card-foreground: 215 79% 91%;
-    --popover: 211 46% 13%;
-    --popover-foreground: 215 79% 91%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
 
     /*
-     * Primary is the bright teal. Its foreground is the deep navy, not white:
-     * white on #2DD4BF measures about 1.9:1 and fails AA outright, while the
-     * navy clears 8:1. The gradient keeps the intended look; the text on it is
-     * simply the colour that can actually be read.
+     * Teal-700 rather than the bright teal: 5.4:1 on white, where #2DD4BF
+     * manages about 2:1 and cannot be used for text or a control edge.
      */
-    --primary: 172 66% 50%;
-    --primary-foreground: 211 76% 8%;
+    --primary: 175 77% 26%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 212 36% 17%;
-    --secondary-foreground: 215 79% 91%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222 47% 18%;
 
-    --muted: 211 46% 13%;
-    --muted-foreground: 215 20% 65%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 20% 35%;
 
-    --accent: 212 36% 17%;
-    --accent-foreground: 215 79% 91%;
+    --accent: 210 40% 94%;
+    --accent-foreground: 222 47% 18%;
 
-    /* Governance amethyst. */
-    --governance: 271 91% 65%;
-    --governance-foreground: 211 76% 8%;
+    /* Amethyst-700 — 5.5:1 on white. */
+    --governance: 272 64% 47%;
+    --governance-foreground: 0 0% 100%;
 
-    /* Semantics, desaturated so they sit quietly in the navy. */
-    --destructive: 6 100% 84%;
-    --destructive-foreground: 356 100% 29%;
-    --success: 160 60% 55%;
-    --success-foreground: 211 76% 8%;
-    --warning: 38 85% 62%;
-    --warning-foreground: 211 76% 8%;
+    --destructive: 0 72% 42%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 158 74% 25%;
+    --success-foreground: 0 0% 100%;
+    --warning: 25 90% 32%;
+    --warning-foreground: 0 0% 100%;
 
-    --border: 215 25% 27%;
-    --input: 222 47% 11%;
-    --ring: 172 66% 50%;
+    --border: 214 32% 88%;
+    --input: 0 0% 100%;
+    --ring: 175 77% 26%;
 
-    /* The accent that a panel glows and gradients with. */
-    --glow: 172 66% 50%;
+    --glow: 175 77% 26%;
 
-    --radius: 1rem;
+    /* ── navigation rail: dark, its own scale ───────────────────────────── */
+    --sidebar: 211 76% 8%;
+    --sidebar-surface: 212 55% 12%;
+    --sidebar-foreground: 215 79% 91%;
+    --sidebar-muted: 215 20% 65%;
+    --sidebar-border: 215 25% 22%;
+    /* The bright pair, legible on navy and used only there. */
+    --sidebar-accent: 172 66% 50%;
+    --sidebar-governance: 271 91% 65%;
+
+    --radius: 0.75rem;
   }
 
   /* Student — the Intelligence side. Teal throughout. */
   [data-panel="student"] {
-    --primary: 172 66% 50%;
-    --primary-foreground: 211 76% 8%;
-    --ring: 172 66% 50%;
-    --glow: 172 66% 50%;
+    --primary: 175 77% 26%;
+    --ring: 175 77% 26%;
+    --glow: 175 77% 26%;
+    --sidebar-accent: 172 66% 50%;
   }
 
-  /*
-   * Teacher — works across both layers, so teal leads and amethyst highlights.
-   */
+  /* Teacher — works across both layers: teal leads, amethyst highlights. */
   [data-panel="teacher"] {
-    --primary: 172 66% 50%;
-    --primary-foreground: 211 76% 8%;
-    --ring: 172 66% 50%;
-    --glow: 271 91% 65%;
+    --primary: 175 77% 26%;
+    --ring: 175 77% 26%;
+    --glow: 272 64% 47%;
+    --sidebar-accent: 172 66% 50%;
   }
 
   /* Admin — the Governance side. Amethyst dominant. */
   [data-panel="admin"] {
-    --primary: 271 91% 65%;
-    --primary-foreground: 211 76% 8%;
-    --ring: 271 91% 65%;
-    --glow: 271 91% 65%;
+    --primary: 272 64% 47%;
+    --ring: 272 64% 47%;
+    --glow: 272 64% 47%;
+    --sidebar-accent: 271 91% 65%;
   }
 
   * {
@@ -139,29 +146,31 @@
 
 @layer components {
   /*
-   * The signature gradient. Used for primary actions and for progress fills,
-   * so "forward motion" reads the same wherever it appears.
+   * The signature gradient, at the darker strength so white text on it clears
+   * AA. Used for primary actions and progress fills, so "forward motion" reads
+   * the same wherever it appears.
    */
   .bg-gradient-engine {
+    background-image: linear-gradient(45deg, hsl(175 77% 26%), hsl(272 64% 47%));
+  }
+
+  /* The bright pair, for use on the dark rail only. */
+  .bg-gradient-engine-bright {
     background-image: linear-gradient(45deg, hsl(172 66% 50%), hsl(271 91% 65%));
   }
 
   .text-gradient-engine {
-    background-image: linear-gradient(45deg, hsl(172 66% 50%), hsl(271 91% 65%));
+    background-image: linear-gradient(45deg, hsl(175 77% 26%), hsl(272 64% 47%));
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
   }
 
-  /*
-   * Glass surface for overlays and chart containers. The blur is what sells
-   * the depth; the border keeps the edge legible when the backdrop is busy.
-   */
+  /* Raised panel on the light surface: white, defined edge, soft lift. */
   .glass {
-    background-color: hsl(var(--surface-2) / 0.8);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background-color: hsl(var(--surface-1));
     border: 1px solid hsl(var(--border));
+    box-shadow: 0 1px 2px hsl(222 47% 11% / 0.04), 0 4px 12px -4px hsl(222 47% 11% / 0.06);
   }
 
   /* Metadata, engine status, data labels — anything the system emits. */
@@ -174,7 +183,7 @@
     text-transform: uppercase;
   }
 
-  /* Hover lift for interactive cards: a diffused accent glow, no drop shadow. */
+  /* Hover lift for interactive cards. */
   .glow-hover {
     transition:
       box-shadow 150ms ease,
@@ -182,8 +191,8 @@
   }
 
   .glow-hover:hover {
-    border-color: hsl(var(--glow) / 0.5);
-    box-shadow: 0 0 0 1px hsl(var(--glow) / 0.2), 0 8px 32px -8px hsl(var(--glow) / 0.25);
+    border-color: hsl(var(--glow) / 0.45);
+    box-shadow: 0 0 0 1px hsl(var(--glow) / 0.12), 0 8px 24px -8px hsl(var(--glow) / 0.2);
   }
 }
 
@@ -192,7 +201,7 @@
   position: fixed;
   top: 1rem;
   left: 1rem;
-  z-index: 50;
+  z-index: 60;
   width: auto;
   height: auto;
   padding: 0.5rem 1rem;

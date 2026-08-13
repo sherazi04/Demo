@@ -1,6 +1,7 @@
 import { tryRequireRole, requireUser } from "@/auth/guard";
 import { NotAuthorised } from "@/components/not-authorised";
-import { PanelShell, type NavItem } from "@/components/panel-shell";
+import { PanelShell } from "@/components/panel-shell";
+import type { NavItem } from "@/components/sidebar";
 
 const NAV: readonly NavItem[] = [
   { href: "/admin", label: "Status", icon: "◈" },

@@ -62,6 +62,17 @@ const config: Config = {
           foreground: "hsl(var(--governance-foreground))",
         },
         glow: "hsl(var(--glow))",
+        // The navigation rail keeps its own dark scale: the bright accents that
+        // read well on navy fail AA on the light content surface.
+        sidebar: {
+          DEFAULT: "hsl(var(--sidebar))",
+          surface: "hsl(var(--sidebar-surface))",
+          foreground: "hsl(var(--sidebar-foreground))",
+          muted: "hsl(var(--sidebar-muted))",
+          border: "hsl(var(--sidebar-border))",
+          accent: "hsl(var(--sidebar-accent))",
+          governance: "hsl(var(--sidebar-governance))",
+        },
         popover: {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",

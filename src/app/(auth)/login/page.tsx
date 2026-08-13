@@ -33,7 +33,7 @@ export default async function LoginPage({
       <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[1.1fr_minmax(0,420px)] lg:gap-16">
         {/* ── what this is ───────────────────────────────────────────────── */}
         <div className="lg:pt-6">
-          <span className="label-mono inline-flex items-center gap-2 rounded-full border border-border bg-surface-2 px-3 py-1 text-primary">
+          <span className="label-mono inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-primary">
             <span aria-hidden="true">◈</span> System initialization
           </span>
 
@@ -54,7 +54,7 @@ export default async function LoginPage({
             The constraint the whole design exists to enforce, stated up front.
             It is the thing worth knowing before clicking anything.
           */}
-          <p className="mt-6 max-w-xl rounded-lg border border-border bg-surface-1 px-5 py-4 text-sm leading-relaxed text-muted-foreground">
+          <p className="mt-6 max-w-xl rounded-lg border border-border bg-card px-5 py-4 text-sm leading-relaxed text-muted-foreground">
             Every question, hint and lesson plan here is traceable to a course learning outcome, a
             Bloom&rsquo;s level, and the source passage it was grounded on.
           </p>
@@ -65,7 +65,7 @@ export default async function LoginPage({
               { term: "Teacher Engine", desc: "Item generation, cohort analytics, lecture planning" },
               { term: "Governance", desc: "Append-only audit, validation, bias monitoring" },
             ].map((item) => (
-              <div key={item.term} className="rounded-lg border border-border bg-surface-1 p-4">
+              <div key={item.term} className="rounded-lg border border-border bg-card p-4">
                 <dt className="label-mono text-primary">{item.term}</dt>
                 <dd className="mt-2 text-sm text-muted-foreground">{item.desc}</dd>
               </div>

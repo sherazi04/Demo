@@ -79,7 +79,7 @@ export function LoginForm({
             onChange={(e) => setEmail(e.target.value)}
             aria-describedby={error ? "login-error" : undefined}
             aria-invalid={error ? true : undefined}
-            className="w-full rounded-md border-0 border-b-2 border-border bg-input px-3 py-2.5 text-sm transition-colors focus:border-primary"
+            className="w-full rounded-md border border-border bg-input px-3 py-2.5 text-sm transition-colors focus:border-primary"
           />
         </div>
 
@@ -98,7 +98,7 @@ export function LoginForm({
               onChange={(e) => setPassword(e.target.value)}
               aria-describedby={error ? "login-error" : undefined}
               aria-invalid={error ? true : undefined}
-              className="w-full rounded-md border-0 border-b-2 border-border bg-input py-2.5 pl-3 pr-16 text-sm transition-colors focus:border-primary"
+              className="w-full rounded-md border border-border bg-input py-2.5 pl-3 pr-16 text-sm transition-colors focus:border-primary"
             />
             {/*
               A toggle rather than a permanently-visible field: mistyping a
@@ -130,7 +130,7 @@ export function LoginForm({
         <button
           type="submit"
           disabled={pending}
-          className="w-full rounded-md bg-gradient-engine px-4 py-2.5 text-sm font-semibold text-[hsl(211_76%_8%)] transition-all hover:brightness-110 disabled:opacity-60"
+          className="w-full rounded-md bg-gradient-engine px-4 py-2.5 text-sm font-semibold text-white transition-all hover:brightness-110 disabled:opacity-60"
         >
           {pending ? "Signing in…" : "Sign in"}
         </button>
@@ -153,7 +153,7 @@ export function LoginForm({
                 type="button"
                 onClick={() => void useDemoAccount(account)}
                 disabled={pending}
-                className="glow-hover flex w-full items-center justify-between gap-3 rounded-md border border-border bg-surface-1 px-4 py-3 text-left disabled:opacity-60"
+                className="glow-hover flex w-full items-center justify-between gap-3 rounded-md border border-border bg-card px-4 py-3 text-left disabled:opacity-60"
               >
                 <span>
                   <span className="block font-display text-sm font-semibold capitalize">
