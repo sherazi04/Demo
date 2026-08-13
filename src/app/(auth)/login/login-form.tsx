@@ -16,13 +16,22 @@ const GENERIC_FAILURE = "That email and password combination was not recognised.
 export function LoginForm({
   initialError,
   demoAccounts = [],
+  prefill,
 }: {
   initialError?: string;
   demoAccounts?: OfferedAccount[];
+  /**
+   * Set when a role card linked here with a seeded account for that role. Both
+   * fields are filled, not just the email: filling only the email would land
+   * someone on a form they still cannot submit, since the password is not
+   * theirs to know. They stay visible and editable, so what is about to be
+   * sent is never hidden.
+   */
+  prefill?: { email: string; password: string };
 }) {
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState(prefill?.email ?? "");
+  const [password, setPassword] = useState(prefill?.password ?? "");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(initialError ? GENERIC_FAILURE : null);
   const [pending, setPending] = useState(false);
@@ -49,17 +58,6 @@ export function LoginForm({
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     await submit(email, password);
-  }
-
-  /**
-   * Fills the fields *and* signs in. Filling alone would leave the person
-   * looking at a populated form wondering whether they still had to do
-   * something; the fields are still filled so it is visible what was used.
-   */
-  async function useDemoAccount(account: OfferedAccount) {
-    setEmail(account.email);
-    setPassword(account.password);
-    await submit(account.email, account.password);
   }
 
   return (
@@ -136,36 +134,19 @@ export function LoginForm({
         </button>
       </form>
 
-      {demoAccounts.length > 0 && (
-        <div className="space-y-3 border-t pt-5">
-          <div>
-            <p className="font-display text-sm font-semibold">Or explore with a demo account</p>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Pre-seeded accounts with real activity. Shown because this is not a
-              production environment and these accounts exist.
-            </p>
-          </div>
-
-          <div className="space-y-2">
-            {demoAccounts.map((account) => (
-              <button
-                key={account.email}
-                type="button"
-                onClick={() => void useDemoAccount(account)}
-                disabled={pending}
-                className="glow-hover flex w-full items-center justify-between gap-3 rounded-md border border-border bg-card px-4 py-3 text-left disabled:opacity-60"
-              >
-                <span>
-                  <span className="block font-display text-sm font-semibold capitalize">
-                    Sign in as {account.role}
-                  </span>
-                  <span className="mt-0.5 block text-xs text-muted-foreground">{account.blurb}</span>
-                </span>
-                <span className="label-mono shrink-0 text-muted-foreground">{account.name}</span>
-              </button>
-            ))}
-          </div>
-        </div>
+      {prefill ? (
+        <p className="border-t pt-4 text-xs leading-relaxed text-muted-foreground">
+          Filled in with a seeded demo account. Press <strong>Sign in</strong> to continue, or
+          replace either field with your own credentials.
+        </p>
+      ) : (
+        demoAccounts.length > 0 && (
+          <p className="border-t pt-4 text-xs leading-relaxed text-muted-foreground">
+            Seeded demo accounts are available — pick a role on the left and this form arrives
+            ready. They appear because this is not a production environment and those accounts
+            exist.
+          </p>
+        )
       )}
     </div>
   );

@@ -4,6 +4,7 @@ import { listOfferedDemoAccounts } from "@/auth/demo-accounts";
 import { SetupRequired } from "@/components/setup-required";
 import { missingSettings } from "@/lib/setup-status";
 import { LoginForm } from "./login-form";
+import { RoleCards } from "./role-cards";
 
 export const metadata = { title: "Sign in · Dual-Engine Learning" };
 
@@ -13,7 +14,7 @@ export const dynamic = "force-dynamic";
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string }>;
+  searchParams: Promise<{ error?: string; role?: string }>;
 }) {
   // Checked before `auth()`, which reads AUTH_SECRET and would throw — turning
   // a fixable configuration gap into an opaque digest.
@@ -23,10 +24,15 @@ export default async function LoginPage({
   const session = await auth();
   if (session?.user?.id) redirect("/");
 
-  const [{ error }, demoAccounts] = await Promise.all([
+  const [{ error, role }, demoAccounts] = await Promise.all([
     searchParams,
     listOfferedDemoAccounts(),
   ]);
+
+  // A role card links here carrying its role. When a seeded account exists for
+  // it, the form arrives filled rather than empty.
+  const matched = demoAccounts.find((account) => account.role === role);
+  const prefill = matched ? { email: matched.email, password: matched.password } : undefined;
 
   return (
     <main id="main" className="min-h-screen bg-background px-6 py-16">
@@ -59,30 +65,30 @@ export default async function LoginPage({
             Bloom&rsquo;s level, and the source passage it was grounded on.
           </p>
 
-          <dl className="mt-8 grid max-w-xl gap-4 sm:grid-cols-3">
-            {[
-              { term: "Student Engine", desc: "Adaptive practice, mastery tracking, learning plans" },
-              { term: "Teacher Engine", desc: "Item generation, cohort analytics, lecture planning" },
-              { term: "Governance", desc: "Append-only audit, validation, bias monitoring" },
-            ].map((item) => (
-              <div key={item.term} className="rounded-lg border border-border bg-card p-4">
-                <dt className="label-mono text-primary">{item.term}</dt>
-                <dd className="mt-2 text-sm text-muted-foreground">{item.desc}</dd>
-              </div>
-            ))}
-          </dl>
+          {/*
+            The role cards are the primary way in, so they are links to the
+            form rather than descriptions of what you would find if you could
+            get there. Each carries its role, and the form arrives prefilled.
+          */}
+          <div className="mt-8 max-w-xl">
+            <RoleCards demoAccounts={demoAccounts} />
+          </div>
         </div>
 
         {/* ── sign in ────────────────────────────────────────────────────── */}
         <div className="lg:pt-6">
-          <div className="glass rounded-lg p-7">
+          <div id="sign-in" className="glass rounded-lg p-7 scroll-mt-8">
             <h2 className="font-display text-xl font-semibold">Authenticate</h2>
             <p className="mt-1 text-sm text-muted-foreground">
               Sign in with your organizational account.
             </p>
 
             <div className="mt-6">
-              <LoginForm initialError={error} demoAccounts={demoAccounts} />
+              <LoginForm
+                initialError={error}
+                demoAccounts={demoAccounts}
+                prefill={prefill}
+              />
             </div>
           </div>
 
